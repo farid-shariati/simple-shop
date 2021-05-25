@@ -1,0 +1,70 @@
+{% extends '_base.html' %}
+{% load static %}
+
+
+{% block content %}
+
+<main>
+    <div class="container">
+
+    <div class="table-responsive text-nowrap">
+    <h2>Basket items</h2>
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Item title</th>
+            <th scope="col">Price</th>
+            <th scope="col">Quantity</th>
+            <th scope="col">Total Item Price</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for basket_item in object.products.all %}
+        <tr>
+            <th scope="row">{{ forloop.counter }}</th>
+            <td>{{ basket_item.product.name }}</td>
+            <td>{{ basket_item.product.price }}</td>
+            <td>
+                <a href="{% url 'remove-single-item-from-cart' basket_item.product.slug %}"><img src="{% static 'img/minus.png' %}" alt=""></a>
+                {{ basket_item.quantity }}
+                <a href="{% url 'add-single-item-to-cart' basket_item.product.slug %}"><img src="{% static 'img/plus.png' %}" alt=""></a>
+            </td>
+            <td>
+                ${{ basket_item.get_total_item_price }}
+            <a style='color: red;' href="{% url 'remove-from-cart' basket_item.product.slug %}">
+                <img src="{% static 'img/delete.png' %}" alt="">
+            </a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan='5'>Your cart is empty</td>
+        </tr>
+        <tr>
+            <td colspan="5">
+            <a class='btn btn-primary float-right' href="{% url 'index' %}">Continue shopping</a>
+            </td>
+        </tr>
+        {% endfor %}
+        {% if object.get_total %}
+        <tr>
+            <td colspan="4"><b>Order Total</b></td>
+            <td><b>${{ object.get_total }}</b></td>
+        </tr>
+        <tr>
+            <td colspan="5">
+            <a class='btn btn-warning float-right ml-2' href='#'>Proceed to checkout</a>
+            <a class='btn btn-primary float-right' href="{% url 'index' %}">Continue shopping</a>
+            </td>
+        </tr>
+        {% endif %}
+        </tbody>
+    </table>
+
+    </div>
+
+    </div>
+  </main>
+
+  {% endblock content %}
